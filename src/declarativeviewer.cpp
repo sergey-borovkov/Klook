@@ -94,9 +94,7 @@ DeclarativeViewer::DeclarativeViewer(QWidget* parent)
     PreviewGenerator::instance()->setModel(m_fileModel);
 
     registerTypes();
-
     setWindowFlags(Qt::WindowStaysOnTopHint | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
-
     setAttribute(Qt::WA_TranslucentBackground);
     setStyleSheet("background:transparent;");
 
@@ -132,7 +130,7 @@ void DeclarativeViewer::init(QStringList urls, bool embedded, const QRect& rc, i
     KWindowSystem::setState(winId(), NET::SkipTaskbar);
 
     if(!isVisible())
-        QTimer::singleShot(200, this, SLOT(showWindow()));
+        QTimer::singleShot(600, this, SLOT(showWindow()));
 
     emit setStartWindow();
 }
@@ -674,12 +672,14 @@ void DeclarativeViewer::onSetGallery(bool isGallery)
 void DeclarativeViewer::showBusy()
 {
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-    centerWidget(QSize(min_width, min_height));
+    if(!isVisible())
+        centerWidget(QSize(min_width, min_height));
 }
 
 void DeclarativeViewer::showWindow()
 {
-    QApplication::restoreOverrideCursor();
+    if(!isVisible())
+        centerWidget(QSize(min_width, min_height));
 }
 
 QSize DeclarativeViewer::getTextWindowSize(QString url) const
