@@ -23,8 +23,9 @@
 import QtQuick 1.0
 
 Item {
-    id: slider; width: 50; height: 10
-    smooth: true
+    id: slider
+    width: 50
+    height: 10
 
     signal posChanged( real pos )
 
@@ -35,8 +36,8 @@ Item {
     property real maximum: 1000
     property real minimum: 0
     property int xMax: width - handle.width - 4
-    onXMaxChanged: updatePos();
-    onMinimumChanged: updatePos();
+
+    smooth: true
 
     function updatePos()
     {
@@ -53,8 +54,12 @@ Item {
         }
     }
 
+    onXMaxChanged: updatePos();
+    onMinimumChanged: updatePos();
+
     Rectangle {
         anchors.fill: parent
+
         smooth: true
 
         gradient: Gradient {
@@ -76,9 +81,12 @@ Item {
     }
 
     Rectangle {
-        id: handle; smooth: true
+        id: handle
         anchors.verticalCenter: parent.verticalCenter
-        width: 14; height:6;
+        width: 14
+        height:6
+
+        smooth: true
 
         Image {
             id: handleImage
@@ -88,13 +96,18 @@ Item {
 
         MouseArea {
             id: mouse
-            anchors.fill: parent; drag.target: parent
-            drag.axis: Drag.XAxis; drag.minimumX: 2; drag.maximumX: slider.xMax + 2
+            anchors.fill: parent
 
-            onPositionChanged:
-            {
-                value = ( maximum - minimum ) * ( handle.x - 2 ) / slider.xMax + minimum;
-                posChanged( value );
+            drag {
+                target: parent
+                axis: Drag.XAxis
+                minimumX: 2
+                maximumX: slider.xMax + 2
+            }
+
+            onPositionChanged: {
+                value = (maximum - minimum) * (handle.x - 2) / slider.xMax + minimum
+                posChanged(value);
             }
         }
     }

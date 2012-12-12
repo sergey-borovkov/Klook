@@ -23,8 +23,10 @@ import QtQuick 1.1
 
 Image {
     source: "image://preview/" + fileUrl + "%"
-    sourceSize.width: parent.width - 20
-    sourceSize.height: parent.height - 20
+    sourceSize {
+        width: parent.width - 20
+        height: parent.height - 20
+    }
 
     cache: false
 

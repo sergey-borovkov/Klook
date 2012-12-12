@@ -22,7 +22,12 @@
 import QtQuick 1.1
 
 Item {
-    id: scrollBar;
+    id: scrollBar
+    width: vertical ? scrollbarWidth : parent.width
+    height: vertical ? parent.height : scrollbarWidth
+    x: vertical ? parent.width - width : 0
+    y: vertical ? 0 : parent.height - height
+
     // The flickable to which the scrollbar is attached to, must be set
     property variant flickable
 
@@ -38,15 +43,11 @@ Item {
     // value is read/write.
     property real value: 0
 
-    width: vertical ? scrollbarWidth : parent.width
-    height: vertical ? parent.height : scrollbarWidth
-    x: vertical ? parent.width - width : 0
-    y: vertical ? 0 : parent.height - height
-
     Rectangle {
         id: background
         anchors.fill: parent
-        radius: vertical ? (width/2 - 1) : (height/2 - 1)
+
+        radius: vertical ? (width / 2 - 1) : (height / 2 - 1)
         color: "black"
         opacity: 0.3
     }
@@ -58,21 +59,18 @@ Item {
 
         onEntered: {}
         onExited: {}
-        onClicked:
-        {
-            if (vertical)
-            {
+        onClicked: {
+            if (vertical) {
                 var cY = (flickable.contentHeight * mouseY / height)
                 var pagePsize = flickable.contentHeight * flickable.visibleArea.heightRatio
-                if (cY > (flickable.contentHeight - pagePsize))
-                {
+                if (cY > (flickable.contentHeight - pagePsize)) {
                     cY = flickable.contentHeight - pagePsize
                 }
+
                 var rowPsize = Math.round(flickable.contentHeight*flickable.visibleArea.heightRatio) / 4
                 var numRow = Math.round(cY / rowPsize)
                 var curNumRow = Math.round(flickable.contentY / rowPsize)
-                if (numRow === curNumRow)
-                {
+                if (numRow === curNumRow) {
                     if (mouseY > scrollBarHandle.Y)
                         numRow++
                     else
@@ -80,8 +78,7 @@ Item {
                 }
                 flickable.contentY = numRow * rowPsize
             }
-            else
-            {
+            else {
                 scrollBarHandle.x = mouseX - scrollBarHandle.width / 2
             }
         }

@@ -26,7 +26,6 @@ Component {
     Item {
         Image {
             id: folderIcon
-
             anchors {
                 left: parent.left
                 leftMargin: leftItemMargin
@@ -36,74 +35,99 @@ Component {
             }
 
             source: "image://mime/" + fileUrl
-            sourceSize.width: Math.min(parent.width / 3, parent.height)
-            sourceSize.height: Math.min(parent.height - anchors.bottomMargin, parent.width)
+            sourceSize {
+                width: Math.min(parent.width / 3, parent.height)
+                height: Math.min(parent.height - anchors.bottomMargin, parent.width)
+            }
         }
 
         InfoItem {
             id: name
+            anchors {
+                left: folderIcon.right
+                right: parent.right
+            }
+            y: (folderIcon.height - folderIcon.paintedHeight) / 2 + iconHeightMargin
+
             elide: Text.ElideRight
             textFormat: Text.StyledText
             maximumLineCount: 5
-            anchors.left: folderIcon.right
-            anchors.right: parent.right
             text: "<b>" + fileName +"</b>"
             font.pointSize: 15
-            y: (folderIcon.height - folderIcon.paintedHeight) / 2 + iconHeightMargin
         }
 
         InfoItem {
             id: itemType
-            anchors.top: name.bottom
-            anchors.left: folderIcon.right
+            anchors {
+                top: name.bottom
+                left: folderIcon.right
+            }
             text: i18n("Folder")
         }
 
         InfoItem {
             id: modified
-            anchors.left: folderIcon.right
-            anchors.top: itemType.bottom
+            anchors {
+                left: folderIcon.right
+                top: itemType.bottom
+            }
+
             text: (statComplete) ? i18n("Last Modified:") + " " + lastModified : i18n("Last Modified:")
             wrapMode: Text.NoWrap
         }
 
         AnimatedImage {
             id: statWaitAnimation
-            anchors.top: itemType.bottom
-            anchors.left: modified.right
-            anchors.leftMargin: 10
+            anchors {
+                top: itemType.bottom
+                left: modified.right
+                leftMargin: 10
+            }
+
             source: "images/loader.gif"
             visible: !statComplete
         }
 
         InfoItem {
             id: size
-            anchors.top: modified.bottom
-            anchors.left: folderIcon.right
+            anchors {
+                top: modified.bottom
+                left: folderIcon.right
+            }
+
             text: (dirSizeComplete)? i18n("Size:") + " " + contentSize : i18n("Size:")
         }
 
         AnimatedImage {
             id: sizeWaitAnimation
-            anchors.top: modified.bottom
-            anchors.left: size.right
-            anchors.leftMargin: 10
+            anchors {
+                top: modified.bottom
+                left: size.right
+                leftMargin: 10
+            }
+
             source: "images/loader.gif"
             visible: !dirSizeComplete
         }
 
         InfoItem {
             id: content
-            anchors.top: size.bottom
-            anchors.left: folderIcon.right
+            anchors {
+                top: size.bottom
+                left: folderIcon.right
+            }
+
             text: (dirSizeComplete)? i18n("Elements:") + " " + countElements : i18n("Elements:")
         }
 
         AnimatedImage {
             id: contentWaitAnimation
-            anchors.top: size.bottom
-            anchors.left: content.right
-            anchors.leftMargin: 10
+            anchors {
+                top: size.bottom
+                left: content.right
+                leftMargin: 10
+            }
+
             source: "images/loader.gif"
             visible: !dirSizeComplete
         }

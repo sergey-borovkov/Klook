@@ -24,26 +24,29 @@ import QtQuick 1.0
 
 Rectangle{
     id: controlPanel
+    anchors {
+        leftMargin: 20
+        rightMargin: 20
+        horizontalCenter: parent.horizontalCenter
+    }
     width: 200
     height: 66
-    opacity: 1
-    color: "#042443"
-    radius: 5
-    border.width: 1
-    border.color: "#3378b9"
-    clip: true
-
-    anchors.leftMargin: 20
-    anchors.rightMargin: 20
-    anchors.horizontalCenter: parent.horizontalCenter
 
     property alias videoSlider: slider
     property alias playItemBtn: playItemButton
     property alias playButtonState: playItemButton.state
     property alias nextButtonState: nextItemButton.state
     property alias prevButtonState: prevItemButton.state
-
     property int margin: 10
+
+    opacity: 1
+    color: "#042443"
+    radius: 5
+    border {
+        width: 1
+        color: "#3378b9"
+    }
+    clip: true
 
     gradient: Gradient {
         GradientStop { position: 0.0; color: "#1c60a0" }
@@ -52,30 +55,35 @@ Rectangle{
 
     Rectangle {
         id: controlPanelSmall
-        anchors.top: parent.top
-        anchors.right: parent.right
-        anchors.left: parent.left
-        anchors.rightMargin: 1
+        anchors {
+            top: parent.top
+            right: parent.right
+            left: parent.left
+            rightMargin: 1
+        }
+        height: 49
 
         clip: true
-        height: 49
         color: "transparent"
         smooth: true
         radius: 5
-        border.width: 1
-        border.color: "#3378b9"
+        border {
+            width: 1
+            color: "#3378b9"
+        }
 
         ControlPanelButton
         {
             id: prevItemButton
+
             name: 'go-previous'
 
-            onButtonClick:
-            {
+            onButtonClick: {
                 photosListView.decrementCurrentIndex()
                 controlPanel.state = mainWindow.updatePanelState()
                 updateMenuButtons()
             }
+
             Behavior on x { NumberAnimation { duration: 100 } }
         }
 
@@ -86,9 +94,8 @@ Rectangle{
             id: nextItemButton
             name: 'go-next'
 
-            onButtonClick:
-            {
-                if ( photosListView.currentIndex === -1 )
+            onButtonClick: {
+                if (photosListView.currentIndex === -1)
                     photosListView.currentIndex = 0
                 photosListView.incrementCurrentIndex()
 
@@ -97,40 +104,36 @@ Rectangle{
             }
         }
 
-        ControlPanelButton
-        {
+        ControlPanelButton {
             id: galleryItemButton
+
             name: 'gallery'
 
-            onButtonClick:
-            {
+            onButtonClick: {
                 setGallery()
                 controlPanel.state = mainWindow.updatePanelState()
                 mainWindow.updatePanel()
             }
         }
 
-        Image
-        {
+        Image {
             id: separator
-            source: "images/separator.png"
             height: parent.height - 10
             anchors.verticalCenter: parent.verticalCenter
+
+            source: "images/separator.png"
         }
 
-        ControlPanelButton
-        {
+        ControlPanelButton {
             id: resumeScreenButton
             name: 'resume'
 
-            onButtonClick:
-            {
+            onButtonClick: {
                 setFullScreen()
             }
         }
 
-        ControlPanelButton
-        {
+        ControlPanelButton {
             id: closeButton
             name: 'close'
 
@@ -140,13 +143,12 @@ Rectangle{
 
     Slider {
         id: slider
-        x: 20
-        y: 54
         width: controlPanel.width - 4 * margin
         height: 6
+        x: 20
+        y: 54
 
-        Behavior on y
-        {
+        Behavior on y {
             NumberAnimation{duration: 400}
         }
     }

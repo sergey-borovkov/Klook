@@ -33,45 +33,54 @@ Component {
 
         Image {
             id: audioIcon
-            anchors.left: parent.left
-            anchors.leftMargin: leftItemMargin
-            anchors.top: parent.top
-            anchors.topMargin: iconHeightMargin
-            anchors.bottomMargin: iconHeightMargin + panel.height
+            anchors {
+                left: parent.left
+                leftMargin: leftItemMargin
+                top: parent.top
+                topMargin: iconHeightMargin
+                bottomMargin: iconHeightMargin + panel.height
+            }
+            width: Math.min(parent.width / 3, parent.height)
+            height: Math.min(parent.height - anchors.bottomMargin, parent.width)
+
             source: "images/audio.png"
             clip: true
-            //opacity: 0
             fillMode: Image.PreserveAspectFit
             asynchronous: true
             smooth: true;
             visible: albumWrapper.state === ""
-            width: Math.min(parent.width / 3, parent.height)
-            height: Math.min(parent.height - anchors.bottomMargin, parent.width)
 
             Behavior on opacity { NumberAnimation { duration: 500 } }
-
         }
 
         InfoItem {
             id : title
+            anchors {
+                left: audioIcon.right
+                right: parent.right
+            }
+            y: (audioIcon.height - audioIcon.paintedHeight) / 2 + iconHeightMargin
+
             font.pointSize: 15
-            anchors.left: audioIcon.right
-            anchors.right: parent.right
-            y: ( audioIcon.height - audioIcon.paintedHeight ) / 2 + iconHeightMargin
         }
 
         InfoItem {
             id : artist
-            anchors.top: title.bottom
-            anchors.left: audioIcon.right
-            anchors.right: parent.right
+            anchors {
+                top: title.bottom
+                left: audioIcon.right
+                right: parent.right
+            }
         }
 
         InfoItem {
             id : totalTime
-            anchors.top: artist.bottom
-            anchors.left: audioIcon.right
-            anchors.right: parent.right
+            anchors {
+                top: artist.bottom
+                left: audioIcon.right
+                right: parent.right
+            }
+
             wrapMode: Text.NoWrap
         }
 
@@ -82,17 +91,16 @@ Component {
 
             Component.onCompleted: {
                 audio.source = filePath
-                //audioIcon.opacity = 1
-                if ( albumWrapper.state === "" )
+                if (albumWrapper.state === "")
                     audio.play()
-                if ( audio.playing )
+                if (audio.playing)
                     panel.playButtonState = 'Play'
                 else
                     panel.playButtonState = 'Pause'
             }
 
             onTicked: {
-                if ( playing )  {
+                if (playing)  {
                     panel.videoSlider.value = tick * 1000 / audio.totalTime; // tick and totalTime in msec
                 }
             }
@@ -115,19 +123,16 @@ Component {
 
             function updateDuration() {
                 var h = audio.totalTime / ( 1000 * 3600 )
-                var strFmt = ( h >= 1 ) ? "hh:mm:ss" : "m:ss"
-
-                totalTime.text = i18n("Total time:") + " <b>" + Qt.formatTime( audio.duration, strFmt ) + "</b>"
+                var strFmt = (h >= 1) ? "hh:mm:ss" : "m:ss"
+                totalTime.text = i18n("Total time:") + " <b>" + Qt.formatTime(audio.duration, strFmt) + "</b>"
             }
         }
 
         Connections{
             target: panel.playItemBtn;
-            onButtonClick:
-            {
-                if ( listItem.ListView.isCurrentItem )
-                {
-                    if ( audio.playing ) {
+            onButtonClick: {
+                if (listItem.ListView.isCurrentItem) {
+                    if (audio.playing) {
                         audio.pause()
                         panel.playButtonState = 'Play'
                     }
@@ -139,13 +144,15 @@ Component {
             }
         }
 
-        Connections{ target: panel.videoSlider; onPosChanged: audio.setPosition( panel.videoSlider.value * audio.totalTime / 1000 ) }
+        Connections {
+            target: panel.videoSlider
+            onPosChanged: audio.setPosition( panel.videoSlider.value * audio.totalTime / 1000 )
+        }
 
         Connections{
-            target: albumWrapper;
-            onStateChanged:
-            {
-                if ( albumWrapper.state === "inGrid" )
+            target: albumWrapper
+            onStateChanged: {
+                if (albumWrapper.state === "inGrid")
                     audio.pause()
                 else
                     audio.play()

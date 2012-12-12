@@ -23,6 +23,8 @@ import QtQuick 1.0
 
 Rectangle {
     id: button
+    width: buttonWidth;
+    height: buttonHeight
 
     property int buttonHeight: 20
     property int buttonWidth: 100
@@ -35,16 +37,14 @@ Rectangle {
     property string  imageUrl: "images/buttons/" + st + "/"+ name + "_" + st + ".png"
 
     clip: true
-
     //set appearance properties
     smooth: true
-    width: buttonWidth;
-    height: buttonHeight
     color: "#00000000"
 
-    Text{
+    Text {
         id: buttonLabel
         anchors.fill: parent
+
         text: label
         smooth: true     //bind the text to the parent's text
         color: "#000000"
@@ -55,10 +55,11 @@ Rectangle {
         z:1
     }
 
-    Image{
+    Image {
         id: buttonImage
-        source: imageUrl
         anchors.centerIn: parent
+
+        source: imageUrl
         smooth: true
         fillMode: Image.PreserveAspectFit
     }
@@ -67,19 +68,18 @@ Rectangle {
 
     MouseArea{
         id: buttonMouseArea
-        smooth: true
         anchors.fill: parent
+
+        smooth: true
         onClicked: buttonClick()
         hoverEnabled: true
 
-        onEntered:
-        {
+        onEntered: {
             if ((button.state != 'disabled') && (button.state != 'checked'))
                 button.state = "hover"
         }
 
-        onExited:
-        {
+        onExited:  {
             if ((button.state != 'disabled') && (button.state != 'checked'))
                 button.state = "normal"
         }

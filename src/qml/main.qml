@@ -24,17 +24,7 @@ import Widgets 1.0
 
 Rectangle {
     id: mainWindow
-    color: "transparent"
-    border.width: 2
-    clip: true
-    border.color: "#7b7b7b"
-    smooth: true
-    focus: true
-    state: ( embedded ? 'embedded' : 'windowed' )
     anchors.fill: parent
-    anchors.leftMargin: 0
-    anchors.rightMargin: 0
-    anchors.bottomMargin: 0
 
     property bool firstFileLoaded: false
     property int currentFileType
@@ -42,13 +32,24 @@ Rectangle {
     property alias mainState: mainWindow.state
     property alias wrapperState: albumWrapper.state
 
-    signal appendItem( string path, int type )
-    signal setGalleryView( bool isGallery )
-
     property string openText: i18n("Open in...")
     property int currentIndex: -1
     property url currentUrl: ""
     property string currentFileName: ""
+
+    signal appendItem( string path, int type )
+    signal setGalleryView( bool isGallery )
+
+    color: "transparent"
+    border {
+        width: 2
+        color: "#7b7b7b"
+    }
+
+    clip: true
+    smooth: true
+    focus: true
+    state: (embedded ? 'embedded' : 'windowed')
 
     function setFullScreen()
     {
@@ -236,21 +237,28 @@ Rectangle {
 
     Image {
         id: arrow
-        source: "images/arrow/arrow-left.png"
         z:100
+
+        source: "images/arrow/arrow-left.png"
         visible: false
     }
 
     // Item 1: menu bar
     Rectangle {
         id: menu
+        anchors {
+            right: parent.right
+            rightMargin: 1
+            left: parent.left
+            leftMargin: 1
+            top: parent.top
+            topMargin: 1
+        }
         height: 27
-        color: "#dadada"
-        anchors.right: parent.right; anchors.rightMargin: 1
-        anchors.left: parent.left; anchors.leftMargin: 1
-        anchors.top: parent.top; anchors.topMargin: 1
-        transformOrigin: Item.Center
         z: 10
+
+        color: "#dadada"
+        transformOrigin: Item.Center
 
         gradient: Gradient {
             GradientStop { position: 0.0; color: Qt.lighter( "#dadada", 1.1 ) }
@@ -259,12 +267,18 @@ Rectangle {
 
         Button {
             id: prevButton
+            anchors {
+                left: parent.left
+                leftMargin: 6
+                verticalCenter: parent.verticalCenter
+            }
+            z: 1
+
             buttonWidth: 42
             buttonHeight: 22
-            anchors.left: parent.left; anchors.leftMargin: 6; anchors.verticalCenter: parent.verticalCenter
             name: 'prev'
             visible: viewMode === "multi"
-            z: 1
+
             onButtonClick: {
                 photosListView.decrementCurrentIndex()
                 updateMenuButtons()
@@ -273,9 +287,14 @@ Rectangle {
 
         Button {
             id: nextButton
+            anchors {
+                left: prevButton.right
+                leftMargin: 0
+                verticalCenter: parent.verticalCenter
+            }
+
             buttonWidth: 42
             buttonHeight: 22
-            anchors.left: prevButton.right; anchors.leftMargin: 0; anchors.verticalCenter: parent.verticalCenter
             name: 'next'
             visible: viewMode === "multi"
 
@@ -289,9 +308,14 @@ Rectangle {
 
         Button {
             id: galleryButton
+            anchors {
+                left: nextButton.right
+                leftMargin: 12
+                verticalCenter: parent.verticalCenter
+            }
+
             buttonWidth: 42
             buttonHeight: 22
-            anchors.left: nextButton.right; anchors.leftMargin: 12; anchors.verticalCenter: parent.verticalCenter
             name: 'gallery'
             visible: viewMode === "multi"
             state: 'normal'
@@ -303,12 +327,15 @@ Rectangle {
 
         Text {
             id: fileNameLabel
-            anchors.verticalCenter: nextButton.verticalCenter
+            anchors {
+                verticalCenter: nextButton.verticalCenter
+                left: ( viewMode === "multi" ) ? galleryButton.right : parent.left
+                leftMargin: 6
+                right: openButton.left
+                rightMargin: 6
+            }
+
             text: currentFileName
-            anchors.left: ( viewMode === "multi" ) ? galleryButton.right : parent.left
-            anchors.leftMargin: 6
-            anchors.right: openButton.left
-            anchors.rightMargin: 6
             color: "#000000"
             font.pointSize: 8
             elide: Text.ElideMiddle
@@ -318,22 +345,31 @@ Rectangle {
 
         Button {
             id: fullscreenButton
+            anchors {
+                right: quitButton.left
+                rightMargin: 0
+                verticalCenter: parent.verticalCenter
+            }
+
             buttonWidth: 42
             buttonHeight: 22
-            anchors.right: quitButton.left; anchors.rightMargin: 0; anchors.verticalCenter: parent.verticalCenter
             name: 'fullscreen'
 
             onButtonClick:{
                 setFullScreen()
             }
-
         }
 
         Button {
             id: quitButton
+            anchors {
+                right: parent.right
+                rightMargin: 6
+                verticalCenter: parent.verticalCenter
+            }
+
             buttonWidth: 42
             buttonHeight: 22
-            anchors.right: parent.right; anchors.rightMargin: 6; anchors.verticalCenter: parent.verticalCenter
             name: 'close'
 
             onButtonClick: quit()
@@ -341,12 +377,16 @@ Rectangle {
 
         Button {
             id: openButton
+            anchors {
+                right: fullscreenButton.left
+                rightMargin: 12
+                verticalCenterOffset: 0
+                verticalCenter: parent.verticalCenter
+            }
+
             buttonWidth: 168
             buttonHeight: 22
-            anchors.right: fullscreenButton.left
-            anchors.rightMargin: 12
-            anchors.verticalCenterOffset: 0
-            anchors.verticalCenter: parent.verticalCenter
+
             name: 'open_in'
             label: openText
 
@@ -359,32 +399,46 @@ Rectangle {
 
     Rectangle {
         id: drawerBorder
+        anchors {
+            right: parent.right
+            rightMargin: 1
+            left: parent.left
+            leftMargin: 1
+            bottom: parent.bottom
+            bottomMargin: 1
+            top: menu.bottom
+            topMargin: -1
+        }
+
         smooth: true
-        anchors.right: parent.right
-        anchors.rightMargin: 1
-        anchors.left: parent.left
-        anchors.leftMargin: 1
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 1
-        anchors.top: menu.bottom
-        anchors.topMargin: -1
-        border.width: 0
-        border.color: "#7b7b7b"
+        border {
+            width: 0
+            color: "#7b7b7b"
+        }
 
         Rectangle {
             id: drawer
+            anchors {
+                rightMargin: 2
+                leftMargin: 2
+                bottomMargin: 2
+                topMargin: 2
+                fill: parent
+            }
+
             clip:true
-            anchors.rightMargin: 2
-            anchors.leftMargin: 2
-            anchors.bottomMargin: 2
-            anchors.topMargin: 2
-            anchors.fill: parent
             color:  "#dadada"
-            border.width: 0
-            border.color: "#000000"
+            border {
+                width: 0
+                color: "#000000"
+            }
 
             Rectangle {
-                id: albumsShade; color: "#333333";  width: parent.width; height: parent.height; opacity: 0.0
+                id: albumsShade
+                color: "#333333"
+                width: parent.width
+                height: parent.height
+                opacity: 0.0
             }
 
             Item {
@@ -394,11 +448,14 @@ Rectangle {
                 Component {
                     id: highlight
                     Rectangle {
-                        width: galleryGridView.cellWidth; height: galleryGridView.cellHeight
-                        color: "#c8b0c4de"; radius: 5
+                        width: galleryGridView.cellWidth
+                        height: galleryGridView.cellHeight
                         x: (galleryGridView.currentIndex !== -1) ? galleryGridView.currentItem.x : 0
                         y: (galleryGridView.currentIndex !== -1) ? galleryGridView.currentItem.y : 0
                         z: 0
+
+                        color: "#c8b0c4de"
+                        radius: 5
                         Behavior on x { SpringAnimation { spring: 1; damping: 0.2 } }
                         Behavior on y { SpringAnimation { spring: 1; damping: 0.2 } }
                     }
@@ -406,7 +463,11 @@ Rectangle {
 
                 GridView {
                     id: galleryGridView
-                    anchors.fill: parent ; anchors.margins: 10
+                    anchors {
+                        fill: parent
+                        margins: 10
+                    }
+
                     model: fileModel
                     delegate: Delegate {}
                     cellWidth: getCellSize(galleryGridView.count).width
@@ -424,11 +485,14 @@ Rectangle {
 
                     MouseArea {
                         id: mouseAreaGrid
-                        anchors.fill: parent
-                        anchors.rightMargin: 20
-                        anchors.bottomMargin: 30
-                        hoverEnabled: true
+                        anchors {
+                            fill: parent
+                            rightMargin: 20
+                            bottomMargin: 30
+                        }
                         z: 20
+
+                        hoverEnabled: true
 
                         onMousePositionChanged: {
                             var mouseIndex = galleryGridView.indexAt(mouseX + galleryGridView.contentX, mouseY + galleryGridView.contentY)
@@ -460,6 +524,7 @@ Rectangle {
 
                     ScrollBar{
                         id: scrollBar
+
                         flickable: galleryGridView
                         vertical: true
                         hideScrollBarsWhenStopped: false
@@ -471,26 +536,26 @@ Rectangle {
 
                 ListView {
                     id: photosListView
+                    anchors.fill: parent
+
                     model: fileModel
                     delegate: SingleDelegate{}
                     orientation: Qt.Horizontal
-                    anchors.fill: parent
-                    anchors.margins: 0
                     spacing: 200
                     clip: true
                     interactive: false
                     focus: true
                     highlightFollowsCurrentItem: true
-                    highlightRangeMode: ListView.StrictlyEnforceRange;
+                    highlightRangeMode: ListView.StrictlyEnforceRange
                     highlightMoveSpeed: 5000
-                    preferredHighlightBegin: 0; preferredHighlightEnd: 0  //this line means that the currently highlighted item will be central in the view
+                    preferredHighlightBegin: 0
+                    preferredHighlightEnd: 0  //this line means that the currently highlighted item will be central in the view
 
                     onCurrentIndexChanged: {
                         fileModel.load(currentIndex)
                         updateMenuButtons()
                         updatePanel()
                     }
-
                 }
 
                 Keys.onLeftPressed:
@@ -501,8 +566,7 @@ Rectangle {
 
                 Keys.onRightPressed:
                 {
-                    if (photosListView.focus === true)
-                    {
+                    if (photosListView.focus === true) {
                         if (photosListView.currentIndex === -1)
                             photosListView.currentIndex = 0
                         photosListView.incrementCurrentIndex()
@@ -579,9 +643,10 @@ Rectangle {
 
             MouseArea {
                 id: mouseControl
+                anchors.fill: panel
                 width:panel.width
                 height: panel.height
-                anchors.fill: panel
+
                 hoverEnabled: true
 
                 onEntered: {
@@ -622,11 +687,13 @@ Rectangle {
 
             PropertyChanges {
                 target: drawer
-                anchors.margins: 1
-                anchors.rightMargin: 2
-                anchors.leftMargin: 2
-                anchors.bottomMargin: 2
-                anchors.topMargin: 1
+                anchors {
+                    margins: 1
+                    rightMargin: 2
+                    leftMargin: 2
+                    bottomMargin: 2
+                    topMargin: 1
+                }
             }
 
             PropertyChanges {
@@ -662,10 +729,12 @@ Rectangle {
 
             PropertyChanges {
                 target: drawer
-                anchors.rightMargin: 0
-                anchors.leftMargin: 0
-                anchors.bottomMargin: 0
-                anchors.topMargin: 0
+                anchors {
+                    rightMargin: 0
+                    leftMargin: 0
+                    bottomMargin: 0
+                    topMargin: 0
+                }
                 color: "#333333"
             }
 
@@ -687,9 +756,11 @@ Rectangle {
             PropertyChanges {
                 target: drawerBorder
                 color: "#537492"
-                anchors.rightMargin: (embeddedLayout === "left") ? 16 : 0
-                anchors.leftMargin: (embeddedLayout === "right") ? 16 : 0
-                anchors.bottomMargin : (embeddedLayout === "top") ? 16 : 0
+                anchors {
+                    rightMargin: (embeddedLayout === "left") ? 16 : 0
+                    leftMargin: (embeddedLayout === "right") ? 16 : 0
+                    bottomMargin : (embeddedLayout === "top") ? 16 : 0
+                }
             }
 
             PropertyChanges {
@@ -703,11 +774,13 @@ Rectangle {
 
             PropertyChanges {
                 target: drawer
-                anchors.margins: 1
-                anchors.rightMargin: 1
-                anchors.leftMargin: 1
-                anchors.bottomMargin: 1
-                anchors.topMargin: 1
+                anchors {
+                    margins: 1
+                    rightMargin: 1
+                    leftMargin: 1
+                    bottomMargin: 1
+                    topMargin: 1
+                }
             }
         }
     ]

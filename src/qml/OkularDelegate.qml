@@ -25,9 +25,10 @@ import Widgets 1.0
 Component {
     Item {
         KPart {
-            url: fileUrl
             width: parent.width
             height: parent.height
+
+            url: fileUrl
 
             Component.onCompleted: {
                 if (index == photosListView.currentIndex) {

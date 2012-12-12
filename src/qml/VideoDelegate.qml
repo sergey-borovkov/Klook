@@ -28,25 +28,15 @@ Component {
     Item
     {
         id: videoItem
+
         signal ready()
+
         Video {
             id: video
-            source: filePath
             anchors.fill: parent
+
+            source: filePath
             visible: (albumWrapper.state === "") && video.ready
-
-            Component.onCompleted: {
-                source = filePath
-                if ( albumWrapper.state === "" )
-                    video.play()
-                if ( video.playing )
-                    panel.playButtonState = 'Play'
-                else
-                    panel.playButtonState = 'Pause'
-
-                video.sizeHintReady.connect(setSizeHint)
-
-            }
 
             function setSizeHint(w, h)
             {
@@ -74,16 +64,27 @@ Component {
                 panel.playButtonState = 'Play'
                 panel.videoSlider.value = 0
             }
+
+            Component.onCompleted: {
+                source = filePath
+                if ( albumWrapper.state === "" )
+                    video.play()
+                if ( video.playing )
+                    panel.playButtonState = 'Play'
+                else
+                    panel.playButtonState = 'Pause'
+
+                video.sizeHintReady.connect(setSizeHint)
+            }
+
             Behavior on opacity { NumberAnimation { duration: 500} }
         }
 
-        Connections{
-            target: panel.playItemBtn;
-            onButtonClick:
-            {
-                if ( listItem.ListView.isCurrentItem )
-                {
-                    if ( video.playing ) {
+        Connections {
+            target: panel.playItemBtn
+            onButtonClick: {
+                if (listItem.ListView.isCurrentItem) {
+                    if (video.playing) {
                         video.pause()
                         panel.playButtonState = 'Play'
                     }
@@ -95,12 +96,15 @@ Component {
             }
         }
 
-        Connections{ target: panel.videoSlider; onPosChanged: video.setPosition( panel.videoSlider.value * video.totalTime / 1000 ) }
+        Connections{
+            target: panel.videoSlider
+            onPosChanged: video.setPosition( panel.videoSlider.value * video.totalTime / 1000 )
+        }
+
         Connections
         {
             target: albumWrapper
-            onStateChanged:
-            {
+            onStateChanged: {
                 if ( albumWrapper.state === "inGrid" )
                     video.pause()
                 else

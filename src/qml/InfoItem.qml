@@ -22,11 +22,14 @@
 import QtQuick 1.1
 
 Text {
+    anchors {
+        leftMargin: middleItemMargin
+        rightMargin: rightItemMargin
+        topMargin: 10
+        bottomMargin: 10
+    }
+
     wrapMode: Text.WrapAnywhere
     color: (mainWindow.state != "fullscreen") ? "black" : "white"
     font.pointSize: 12
-    anchors.leftMargin: middleItemMargin
-    anchors.rightMargin: rightItemMargin
-    anchors.topMargin: 10
-    anchors.bottomMargin: 10
 }

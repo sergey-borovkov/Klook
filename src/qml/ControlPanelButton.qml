@@ -24,6 +24,9 @@ import QtQuick 1.0
 
 Rectangle {
     id: controlPanelButton
+    anchors.verticalCenter: parent.verticalCenter
+    width: buttonWidth;
+    height: buttonHeight
 
     property string name
     property string imageUrl: "images/"+ name + ".png"; clip: true
@@ -31,31 +34,32 @@ Rectangle {
     property int buttonWidth: 40
     property int buttonHeight: 40
 
+    signal buttonClick()
+
     //set appearance properties
-    radius:6
+    radius: 6
     smooth: true
-    width: buttonWidth;
-    height: buttonHeight
     color: "#00000000"
-    anchors.verticalCenter: parent.verticalCenter
     state: "normal"
 
-    Image{
+    Image {
         id: buttonImage
+        anchors {
+            fill: parent
+            margins: 6
+        }
+
         source: imageUrl
-        anchors.fill: parent
         smooth: true
         fillMode: Image.PreserveAspectFit
-        anchors.margins: 6
         opacity: 1
     }
 
-    signal buttonClick()
-
-    MouseArea{
+    MouseArea {
         id: buttonMouseArea
-        smooth: true
         anchors.fill: parent
+
+        smooth: true
         onClicked: buttonClick()
     }
 

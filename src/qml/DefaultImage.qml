@@ -19,13 +19,14 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-import QtQuick 1.0
+import QtQuick 1.1
 
 Image {
     anchors.centerIn: parent
-    source: "images/pla-empty-box.png"
     width:  galleryGridView.cellWidth - 20
     height: galleryGridView.cellHeight - 20
+
+    source: "images/pla-empty-box.png"
     fillMode: Image.Stretch
     smooth: true
     visible: albumWrapper.state === "inGrid"

@@ -26,8 +26,9 @@ Component {
     Item {
         AnimatedImage {
             id: animation
-            source: "images/loader.gif"
             anchors.centerIn: parent
+
+            source: "images/loader.gif"
         }
         states: [
             State {

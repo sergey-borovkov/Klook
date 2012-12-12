@@ -27,10 +27,12 @@ Component {
 
     Item {
         id: txtItem
+
         PlainText {
             id: txt
-            source: filePath
             anchors.fill: parent
+
+            source: filePath
             preview: false
         }
 

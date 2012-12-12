@@ -24,7 +24,8 @@ import Widgets 1.0
 
 Item {
     id: listItem
-    width: photosListView.width; height: photosListView.height
+    width: photosListView.width
+    height: photosListView.height
 
     property int iconHeightMargin: (height - panel.height) / 10 // icon height is 4/5 of item height minus panel height
     property int leftItemMargin: 20    // before icon

@@ -33,34 +33,46 @@ Component {
                 topMargin: iconHeightMargin
                 bottomMargin: iconHeightMargin + panel.height
             }
+
             source: "image://mime/" + fileUrl
-            sourceSize.width: Math.min(parent.width / 3, parent.height)
-            sourceSize.height: Math.min(parent.height - anchors.bottomMargin, parent.width)
+            sourceSize {
+                width: Math.min(parent.width / 3, parent.height)
+                height: Math.min(parent.height - anchors.bottomMargin, parent.width)
+            }
         }
 
         InfoItem {
             id: name
+            anchors {
+                left: mimeIcon.right
+                right: parent.right
+            }
+            y: (mimeIcon.height - mimeIcon.paintedHeight) / 2 + iconHeightMargin
+
             elide: Text.ElideRight
             textFormat: Text.StyledText
             maximumLineCount: 5
-            anchors.left: mimeIcon.right
-            anchors.right: parent.right
             text: "<b>" + fileName +"</b>"
             font.pointSize: 15
-            y: (mimeIcon.height - mimeIcon.paintedHeight) / 2 + iconHeightMargin
         }
 
         InfoItem {
             id: itemType
-            anchors.top: name.bottom
-            anchors.left: mimeIcon.right
+            anchors {
+                top: name.bottom
+                left: mimeIcon.right
+            }
+
             text: mime
         }
 
         InfoItem {
             id: modified
-            anchors.top: itemType.bottom
-            anchors.left: mimeIcon.right
+            anchors {
+                top: itemType.bottom
+                left: mimeIcon.right
+            }
+
             text: (statComplete)? i18n("Last Modified:") + " " + lastModified : i18n("Last Modified:")
             elide: Text.ElideNone
             wrapMode: Text.NoWrap
@@ -68,29 +80,37 @@ Component {
 
         AnimatedImage {
             id: modifiedWaitAnimation
-            anchors.top: itemType.bottom
-            anchors.left: modified.right
-            anchors.leftMargin: 10
+            anchors {
+                top: itemType.bottom
+                left: modified.right
+                leftMargin: 10
+            }
+
             source: "images/loader.gif"
             visible: !statComplete
         }
 
         InfoItem {
             id: size
-            anchors.top: modified.bottom
-            anchors.left: mimeIcon.right
+            anchors {
+                top: modified.bottom
+                left: mimeIcon.right
+            }
+
             text:  (statComplete)? i18n("Size:") + " " + contentSize : i18n("Size:")
         }
 
         AnimatedImage {
             id: sizeWaitAnimation
-            anchors.top: modified.bottom
-            anchors.left: size.right
-            anchors.leftMargin: 10
+            anchors {
+                top: modified.bottom
+                left: size.right
+                leftMargin: 10
+            }
+
             source: "images/loader.gif"
             visible: !statComplete
         }
-
 
         states: [
             State {

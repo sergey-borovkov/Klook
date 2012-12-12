@@ -22,43 +22,46 @@
 import QtQuick 1.0
 
 Rectangle {
-
-    //identifier of the item
     id: playButton
+    anchors.verticalCenter: parent.verticalCenter
+    width: 44
+    height: 44
 
     // the color highlight when the mouse hovers on the rectangle
     property color onHoverColor: Qt.darker( borderColor, 1.3 )
     property color borderColor: "#7A8182"
-
     // buttonColor is set to the button's main color
     property color buttonColor: "#61BDCACD"
 
-    //set appearance properties
+    signal buttonClick()
+
     radius: 6
     opacity: 1
     smooth: true
-    border.width: 0
-    border.color: borderColor
-    width: 44; height: 44
+    border {
+        width: 0
+        color: borderColor
+    }
     color: "#00000000"
     state: 'Pause'
-    anchors.verticalCenter: parent.verticalCenter
 
     Image {
         id: buttonImage
+        anchors {
+            fill: parent
+            margins: 6
+        }
+
         source: "images/play.png"
-        anchors.fill: parent
-        anchors.margins: 6
         smooth: true
         fillMode: Image.PreserveAspectFit
     }
 
-    signal buttonClick()
-
-    MouseArea{
+    MouseArea {
         id: buttonMouseArea
-        smooth: true
         anchors.fill: parent
+
+        smooth: true
 
         onClicked: buttonClick()
     }
